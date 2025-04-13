@@ -14,11 +14,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,12 +27,10 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,9 +41,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import py.com.sodep.kotlin.challenge.presentacion.components.AnimatedTaskItem
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
     onTaskClick: (Int) -> Unit,
@@ -87,8 +84,7 @@ fun TaskListScreen(
                     .fillMaxWidth()
             ) {
                 items(tasks) { task ->
-                    TaskItem(task = task, onClick = { onTaskClick(task.id) })
-                }
+                    AnimatedTaskItem(task = task, onClick = { onTaskClick(task.id) })                }
             }
 
             FloatingActionButton(
@@ -156,7 +152,7 @@ fun CustomTopAppBar(title: String, onBackClick: (() -> Unit)? = null) {
             }
         },
         actions = {
-            IconButton(onClick = { /* Acción adicional */ }) {
+            IconButton(onClick = {  }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "Más opciones"
@@ -179,14 +175,22 @@ fun PriorityDropdownMenu(
         expanded = expanded,
         onExpandedChange = onExpandedChange
     ) {
-        TextField(
+        OutlinedTextField(
             value = selectedPriority,
             onValueChange = {},
             label = { Text("Filtrar por prioridad") },
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Abrir menú",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             },
             readOnly = true,
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
             modifier = Modifier
                 .menuAnchor()
                 .fillMaxWidth()
@@ -197,11 +201,18 @@ fun PriorityDropdownMenu(
         ) {
             priorities.forEach { priority ->
                 DropdownMenuItem(
-                    text = { Text(priority) },
+                    text = {
+                        Text(
+                            text = priority,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
                     onClick = {
                         onPrioritySelected(priority)
                         onExpandedChange(false)
-                    }
+                    },
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
         }
