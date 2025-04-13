@@ -1,4 +1,4 @@
-package py.com.sodep.kotlin.challenge.ui.theme
+package com.example.desafiodesodep.presentacion.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

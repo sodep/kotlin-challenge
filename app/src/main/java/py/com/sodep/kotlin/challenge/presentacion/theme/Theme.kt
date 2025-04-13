@@ -1,6 +1,5 @@
-package py.com.sodep.kotlin.challenge.ui.theme
+package com.example.desafiodesodep.presentacion.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
