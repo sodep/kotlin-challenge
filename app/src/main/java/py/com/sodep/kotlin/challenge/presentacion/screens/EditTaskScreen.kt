@@ -30,6 +30,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import py.com.sodep.kotlin.challenge.presentacion.components.scheduleNotification
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -151,6 +152,16 @@ fun EditTaskScreen(
                     )
                     if (updatedTask != null) {
                         viewModel.updateTask(updatedTask)
+
+                        val dateTimeInMillis = calendar.timeInMillis
+                        scheduleNotification(
+                            context = context,
+                            taskId = updatedTask.id,
+                            title = updatedTask.title,
+                            description = updatedTask.description,
+                            dateTime = dateTimeInMillis
+                        )
+
                         onTaskUpdated()
                     }
                 },

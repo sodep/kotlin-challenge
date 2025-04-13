@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import py.com.sodep.kotlin.challenge.data.TaskViewModel
 import py.com.sodep.kotlin.challenge.data.local.Task
+import py.com.sodep.kotlin.challenge.presentacion.components.scheduleNotification
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -144,6 +145,15 @@ fun AddTaskScreen(
                         dateTime = dateTime.value
                     )
                     viewModel.addTask(newTask)
+                    val dateTimeInMillis = calendar.timeInMillis
+                    scheduleNotification(
+                        context = context,
+                        taskId = newTask.id,
+                        title = newTask.title,
+                        description = newTask.description,
+                        dateTime = dateTimeInMillis
+                    )
+
                     onTaskAdded()
                 },
                 enabled = isFormValid,
