@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import py.com.sodep.kotlin.challenge.presentacion.components.AnimatedTaskItem
 
 
@@ -102,9 +103,9 @@ fun TaskListScreen(
 @Composable
 fun TaskItem(task: Task, onClick: () -> Unit) {
     val borderColor = when (task.priority.lowercase()) {
-        "alta" -> MaterialTheme.colorScheme.error
-        "media" -> MaterialTheme.colorScheme.secondary
-        "baja" -> MaterialTheme.colorScheme.primary
+        "alta" -> Color.Red
+        "media" -> Color(0xFFFFC107)
+        "baja" -> Color(0xFF4CAF50)
         else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
     }
 
