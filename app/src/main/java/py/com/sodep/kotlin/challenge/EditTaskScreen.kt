@@ -1,25 +1,24 @@
 package py.com.sodep.kotlin.challenge
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import java.time.LocalDateTime
+import androidx.compose.ui.Alignment
 
 @Composable
-fun AddTaskScreen(
+fun EditTaskScreen(
+    task: Task,
     onSave: (Task) -> Unit,
+    onDelete: (Task) -> Unit,
     onCancel: () -> Unit
 ) {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var priority by remember { mutableStateOf(Priority.MEDIA) }
-
-    val now = LocalDateTime.now()
+    var title by remember { mutableStateOf(task.title) }
+    var priority by remember { mutableStateOf(task.priority) }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Nueva Tarea", style = MaterialTheme.typography.titleLarge)
+        Text(text = "Editar Tarea", style = MaterialTheme.typography.titleLarge)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -30,29 +29,20 @@ fun AddTaskScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = description,
-            onValueChange = { description = it },
-            label = { Text("Descripción") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(text = "Prioridad:")
         Row {
             Priority.values().forEach { p ->
                 Row(
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(end = 8.dp)
                 ) {
                     RadioButton(
                         selected = priority == p,
                         onClick = { priority = p }
                     )
-                    Text(text = p.name)
+                    Text(p.name)
                 }
             }
         }
@@ -61,19 +51,18 @@ fun AddTaskScreen(
 
         Row {
             Button(onClick = {
-                onSave(
-                    Task(
-                        title = title,
-                        description = description,
-                        dateTime = now,
-                        priority = priority
-                    )
-                )
+                onSave(task.copy(title = title, priority = priority))
             }) {
-                Text("Guardar")
+                Text("Guardar cambios")
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+
+            OutlinedButton(onClick = { onDelete(task) }) {
+                Text("Eliminar")
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             OutlinedButton(onClick = onCancel) {
                 Text("Cancelar")

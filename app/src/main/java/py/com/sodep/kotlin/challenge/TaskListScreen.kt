@@ -34,22 +34,43 @@ fun TaskListScreen(
 fun TaskItem(task: Task, onClick: () -> Unit) {
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
+    // Cambiar el color según la prioridad
+    val cardColor = when (task.priority) {
+        Priority.ALTA -> MaterialTheme.colorScheme.error     // Rojo
+        Priority.MEDIA -> MaterialTheme.colorScheme.tertiary // Amarillo
+        Priority.BAJA -> MaterialTheme.colorScheme.secondary // Verde
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = cardColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = task.title, style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = task.title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            task.description?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
             Text(
                 text = "Fecha: ${task.dateTime.format(formatter)}",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Text(
                 text = "Prioridad: ${task.priority}",
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

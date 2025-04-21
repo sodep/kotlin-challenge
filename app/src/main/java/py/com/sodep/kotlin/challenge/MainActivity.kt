@@ -23,11 +23,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             KotlinchallengeTheme {
                 val navController = rememberNavController()
-
-                // Estado de tareas en memoria
                 val taskList = remember { mutableStateListOf<Task>() }
 
-                // Cargar algunas tareas por defecto
                 LaunchedEffect(Unit) {
                     taskList.addAll(
                         listOf(
@@ -77,7 +74,7 @@ class MainActivity : ComponentActivity() {
                             TaskListScreen(
                                 tasks = taskList,
                                 onTaskClick = { task ->
-                                    println("Tocaste la tarea: ${task.title}")
+                                    navController.navigate("editTask/${task.id}")
                                 },
                                 modifier = Modifier.padding(innerPadding)
                             )
@@ -88,15 +85,40 @@ class MainActivity : ComponentActivity() {
                         AddTaskScreen(
                             onSave = { newTask ->
                                 taskList.add(newTask)
-                                navController.popBackStack() // Volver atrás
+                                navController.popBackStack()
                             },
                             onCancel = {
                                 navController.popBackStack()
                             }
                         )
                     }
-                }
-            }
-        }
-    }
-}
+
+                    composable("editTask/{taskId}") { backStackEntry ->
+                        val taskId = backStackEntry.arguments?.getString("taskId")
+                        val task = taskList.find { it.id == taskId }
+
+                        if (task != null) {
+                            EditTaskScreen(
+                                task = task,
+                                onSave = { updatedTask ->
+                                    val index = taskList.indexOfFirst { it.id == task.id }
+                                    if (index != -1) {
+                                        taskList[index] = updatedTask
+                                    }
+                                    navController.popBackStack()
+                                },
+                                onDelete = { taskToDelete ->
+                                    taskList.remove(taskToDelete)
+                                    navController.popBackStack()
+                                },
+                                onCancel = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                    }
+                } //
+            } //
+        } //
+    } //
+} //
