@@ -12,7 +12,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import androidx.navigation.navArgument
 import py.com.sodep.kotlin.challenge.ui.theme.KotlinchallengeTheme
 import java.time.LocalDateTime
 
@@ -74,7 +76,7 @@ class MainActivity : ComponentActivity() {
                             TaskListScreen(
                                 tasks = taskList,
                                 onTaskClick = { task ->
-                                    navController.navigate("editTask/${task.id}")
+                                    navController.navigate("taskDetail/${task.id}")
                                 },
                                 modifier = Modifier.padding(innerPadding)
                             )
@@ -93,7 +95,34 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable("editTask/{taskId}") { backStackEntry ->
+                    composable(
+                        "taskDetail/{taskId}",
+                        arguments = listOf(navArgument("taskId") { type = NavType.StringType })
+                    ) { backStackEntry ->
+                        val taskId = backStackEntry.arguments?.getString("taskId")
+                        val task = taskList.find { it.id == taskId }
+
+                        if (task != null) {
+                            TaskDetailScreen(
+                                task = task,
+                                onEditClick = {
+                                    navController.navigate("editTask/${task.id}")
+                                },
+                                onDeleteClick = {
+                                    taskList.remove(task)
+                                    navController.popBackStack()
+                                },
+                                onBack = {
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                    }
+
+                    composable(
+                        "editTask/{taskId}",
+                        arguments = listOf(navArgument("taskId") { type = NavType.StringType })
+                    ) { backStackEntry ->
                         val taskId = backStackEntry.arguments?.getString("taskId")
                         val task = taskList.find { it.id == taskId }
 
@@ -117,8 +146,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-                } //
-            } //
-        } //
-    } //
-} //
+                }
+            }
+        }
+    }
+}
